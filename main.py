@@ -17,6 +17,8 @@ help =  """
 
         """
 
+LICENSE_NOT_FOUND  = '(Licence not found)'
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -43,7 +45,7 @@ def get_pkg_license(pkgname):
     for line in lines:
         if line.startswith('License:'):
             return line[9:]
-    return '(Licence not found)'
+    return LICENSE_NOT_FOUND
 
 
 def get_licenses(pkg_names):
@@ -83,6 +85,7 @@ if __name__ == "__main__":
         exit(-1)
 
     licenses = licenses_from_requirements(pathname)
+    
 
     licences_string = ""
     for license in set(licenses):
@@ -98,13 +101,21 @@ if __name__ == "__main__":
     print("LICENSE CHECKER:")
     print("tot num pkgs found in requirements:", num_packages_required)
     
-    print("licenses found: ", len(licenses))
-    if num_packages_required==len(licenses):
+    print("licenses found: ", len([l for l in licenses if l != LICENSE_NOT_FOUND]))
+
+    print(licenses)
+    if LICENSE_NOT_FOUND not in licenses:
         print(f"{bcolors.OKGREEN}found all licenses!{bcolors.ENDC}")
     else:
-        print(f"{bcolors.FAIL}some licenses are missing!{bcolors.ENDC}")
-    
-    print("the licenses are:", licences_string)
+        print(f"{bcolors.FAIL}some licenses are missing!")
+        print("pkgs with missing license:")
+        print([key for key, val in dict(zip(pgk_names_from_requirements(pathname), licenses)).items() if val == LICENSE_NOT_FOUND])
+        print(bcolors.ENDC)
+
+    print(f"the licenses are:\n{licences_string}" )
+    print("license dictionary:")
+    print(dict(zip(pgk_names_from_requirements(pathname), licenses)))
+
 
 
 
