@@ -1,7 +1,33 @@
 import pkg_resources
+import sys
+import os
 
 # https://stackoverflow.com/questions/19086030/can-pip-or-setuptools-distribute-etc-list-the-license-used-by-each-install
 # needs to run in an envinronment on which all of the packages listed in requirements.txt are installed.
+
+help =  """
+        HELP:
+
+        -V 
+        Non verbose mode, only prints out found licenses, one line each.
+
+        NOTES:
+
+        This program needs to run in an envinronment on which all of the packages listed in requirements.txt are installed.
+
+        """
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 
 
 def get_pkg_license(pkgname):
@@ -34,12 +60,52 @@ def licenses_from_requirements(pathname):
     pkg_names = pgk_names_from_requirements(pathname)
     return get_licenses(pkg_names)
 
+
+
 if __name__ == "__main__":
+
+    # print help
+    if "--help" in sys.argv:
+        print(help)
+      
+        exit(0)
+
+
+    try:
+        pathname = sys.argv[1]
+    except:
+        print(f"Correct usage:\npython3 {__name__.replace('__', '')}.py path/to/requirements.txt\nFor options use --help")
+        exit(-1)
+    
+
+    if not os.path.isfile(pathname):
+        print(f"Error: '{pathname}' is not a file!")
+        exit(-1)
+
+    licenses = licenses_from_requirements(pathname)
+
+    licences_string = ""
+    for license in set(licenses):
+        licences_string+=f"{license}\n"
+
+ 
+    # non-verbose mode:
+    if "-V" in sys.argv:
+        print(licences_string)
+        exit(0)
+
+    num_packages_required = len(pgk_names_from_requirements(pathname))
     print("LICENSE CHECKER:")
-    print("tot num pkgs found in requirements:", len(pgk_names_from_requirements("/home/aiman/Desktop/requirements.txt")))
-    licenses = licenses_from_requirements("/home/aiman/Desktop/requirements.txt")
+    print("tot num pkgs found in requirements:", num_packages_required)
+    
     print("licenses found: ", len(licenses))
-    print("the licenses are:", set(licenses))
+    if num_packages_required==len(licenses):
+        print(f"{bcolors.OKGREEN}found all licenses!{bcolors.ENDC}")
+    else:
+        print(f"{bcolors.FAIL}some licenses are missing!{bcolors.ENDC}")
+    
+    print("the licenses are:", licences_string)
+
 
 
 
