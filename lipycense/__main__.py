@@ -2,7 +2,6 @@ import pkg_resources
 import sys
 import os
 
-# https://stackoverflow.com/questions/19086030/can-pip-or-setuptools-distribute-etc-list-the-license-used-by-each-install
 # needs to run in an envinronment on which all of the packages listed in requirements.txt are installed.
 
 help =  """
@@ -17,9 +16,10 @@ help =  """
 
         """
 
-LICENSE_NOT_FOUND  = '(Licence not found)'
+LICENSE_NOT_FOUND  = 'LICENSENOTFOUND'
 
-class bcolors:
+
+class colors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
@@ -29,7 +29,6 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-
 
 
 def get_pkg_license(pkgname):
@@ -105,12 +104,12 @@ if __name__ == "__main__":
 
     print(licenses)
     if LICENSE_NOT_FOUND not in licenses:
-        print(f"{bcolors.OKGREEN}found all licenses!{bcolors.ENDC}")
+        print(f"{colors.OKGREEN}found all licenses!{colors.ENDC}")
     else:
-        print(f"{bcolors.FAIL}some licenses are missing!")
+        print(f"{colors.FAIL}some licenses are missing!")
         print("pkgs with missing license:")
         print([key for key, val in dict(zip(pgk_names_from_requirements(pathname), licenses)).items() if val == LICENSE_NOT_FOUND])
-        print(bcolors.ENDC)
+        print(colors.ENDC)
 
     print(f"the licenses are:\n{licences_string}" )
     print("license dictionary:")
