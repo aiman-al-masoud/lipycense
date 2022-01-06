@@ -16,7 +16,7 @@ setup(
     'Development Status :: 3 - Alpha',      # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
     'Intended Audience :: Developers',      # Define that your audience are developers
     'Topic :: Software Development :: Build Tools',
-    'License :: OSI Approved :: GPL-3.0 License',   # Again, pick a license
+    'License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)', # Again, pick a license
     'Programming Language :: Python :: 3.8', #Specify which pyhton versions that you want to support
   ],
 )
